@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">阿宝语音识别</string>
+    <string name="splash_title">阿宝智能体语音识别系统</string>
+    <string name="enter_system">进入系统</string>
+    <string name="brand_title">阿宝智能体语音识别系统</string>
+    <string name="agent_online">阿宝在线</string>
+    <string name="agent_hint_default">选择场景后，点击录入开始和阿宝对话。</string>
+    <string name="tab_warmup">课前热身</string>
+    <string name="tab_practice">课中演练</string>
+    <string name="tab_challenge">课后挑战</string>
+    <string name="warmup_title">课前热身</string>
+    <string name="practice_title">课中演练</string>
+    <string name="challenge_title">课后挑战</string>
+    <string name="current_scenario">当前情景</string>
+    <string name="hint">提示</string>
+    <string name="translate_help">中文求助</string>
+    <string name="student_answer">学生回答</string>
+    <string name="input_placeholder">点击开始录入，或直接输入一句英文用于演示。</string>
+    <string name="record_start">🎙 开始录入</string>
+    <string name="record_stop">■ 停止并识别</string>
+    <string name="record_recognizing">识别中…</string>
+    <string name="finish_reading">完成朗读</string>
+    <string name="play_prompt">播放阿宝问题</string>
+    <string name="follow_read">跟读</string>
+    <string name="total_score_label">综合分</string>
+    <string name="wpm_label">词/min</string>
+    <string name="ai_analysis">AI 解析</string>
+    <string name="correction_prefix">参考优化：</string>
+    <string name="challenge_heading">面试互动挑战</string>
+    <string name="challenge_body">你在面试中被问到最大的弱点。结合专业和未来岗位，选择一个真实且恰当的弱点，运用 PAR 模型进行回答。</string>
+    <string name="scenario_label">选择模拟情景</string>
+    <string name="recording_placeholder">安卓端正在录音，请开始说英文…</string>
+    <string name="recognizing_placeholder">安卓端正在识别…</string>
+    <string name="recognize_error_suffix">。也可以直接输入英文用于演示。</string>
+    <string name="dialogue_live_region">对话区域</string>
+</resources>

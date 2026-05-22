@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>阿宝智能体语音识别系统</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <section class="splash-screen" id="splashScreen" aria-label="系统首页">
+    <div class="splash-logo">🐼</div>
+    <div class="splash-copy">
+      <h1>阿宝智能体语音识别系统</h1>
+      <div class="wave-line" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <button class="enter-button" id="enterButton" type="button">
+        <span>🎙</span>
+        进入系统
+      </button>
+    </div>
+    <img class="splash-panda" src="./assets/panda-hero.jpg" alt="熊猫阿宝欢迎进入系统" />
+  </section>
+
+  <main class="app-shell" id="appShell" hidden>
+    <section class="agent-panel" aria-label="阿宝智能体">
+      <div class="brand">
+        <div class="brand-mark">🐼</div>
+        <span>阿宝智能体语音识别系统</span>
+      </div>
+      <div class="panda-stage">
+        <div class="panda-avatar" aria-label="熊猫阿宝待机动画">
+            <img id="pandaAvatarImage" src="./assets/panda-hanfu.png" alt="熊猫阿宝智能体" />
+        </div>
+      </div>
+      <div class="agent-card">
+        <span class="status-dot"></span>
+        <div>
+          <strong>阿宝在线</strong>
+          <p id="agentHint">选择场景后，点击录入开始和阿宝对话。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="lesson-panel" aria-label="课程演练">
+      <nav class="tabs" aria-label="课程阶段">
+        <button class="tab active" data-tab="warmup">课前热身</button>
+        <button class="tab" data-tab="practice">课中演练</button>
+        <button class="tab" data-tab="challenge">课后挑战</button>
+      </nav>
+
+      <section class="lesson-card" id="warmup">
+        <div class="section-title">
+          <span></span>
+          <h1>课前热身</h1>
+        </div>
+        <div class="word-grid" id="wordGrid"></div>
+      </section>
+
+      <section class="lesson-card practice-card" id="practice" hidden>
+        <div class="section-title">
+          <span></span>
+          <h1>课中演练</h1>
+          <select id="scenarioSelect" aria-label="选择模拟情景"></select>
+        </div>
+
+        <div class="scenario-strip">
+          <div>
+            <small>当前情景</small>
+            <strong id="scenarioTitle"></strong>
+          </div>
+          <button class="ghost-button" id="hintButton" type="button">提示</button>
+          <button class="ghost-button" id="translateButton" type="button">中文求助</button>
+        </div>
+
+        <div class="dialogue" id="dialogue" aria-live="polite"></div>
+
+        <div class="recording-area">
+          <div class="transcript-box">
+            <label for="studentInput">学生回答</label>
+            <textarea id="studentInput" placeholder="点击开始录入，或直接输入一句英文用于演示。"></textarea>
+          </div>
+          <div class="controls">
+            <button class="round-button" id="speakPromptButton" type="button" title="播放阿宝问题">▶</button>
+            <button class="primary-button" id="recordButton" type="button">🎙 开始录入</button>
+            <button class="success-button" id="finishButton" type="button">完成朗读</button>
+          </div>
+        </div>
+
+        <div class="feedback-panel" id="feedbackPanel" hidden>
+          <div class="score-hero">
+            <div class="score-ring">
+              <strong id="totalScore">0</strong>
+              <span>综合分</span>
+            </div>
+            <div class="speed-meter">
+              <div class="meter-arc">
+                <i id="speedNeedle"></i>
+              </div>
+              <strong id="speedValue">0</strong>
+              <span>词/min</span>
+            </div>
+          </div>
+          <div class="metric-list" id="metricList"></div>
+          <div class="analysis">
+            <h2>AI 解析</h2>
+            <p id="analysisText"></p>
+            <div class="correction" id="correctionText"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lesson-card challenge-card" id="challenge" hidden>
+        <div class="section-title">
+          <span></span>
+          <h1>课后挑战</h1>
+        </div>
+        <div class="challenge-poster">
+          <img src="./assets/challenge.png" alt="课后挑战展示图" />
+          <div>
+            <h2>面试互动挑战</h2>
+            <p>你在面试中被问到最大的弱点。结合专业和未来岗位，选择一个真实且恰当的弱点，运用 PAR 模型进行回答。</p>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+
+</html>
