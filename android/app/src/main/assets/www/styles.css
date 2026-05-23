@@ -382,8 +382,9 @@ textarea {
 }
 
 .dialogue {
-  min-height: 120px;
-  overflow: visible;
+  height: 158px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 4px 4px 10px;
   border-bottom: 1px solid #d8e1ef;
 }
@@ -433,10 +434,9 @@ textarea {
 }
 
 .recording-area {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 18px;
-  align-items: end;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding-top: 16px;
 }
 
@@ -462,14 +462,18 @@ textarea {
 
 .controls {
   display: grid;
-  grid-template-columns: 46px 150px 150px;
+  grid-template-columns: 46px 1fr 1fr;
   gap: 10px;
+  width: 100%;
 }
 
 .round-button {
   width: 46px;
   height: 46px;
   border-radius: 50%;
+  border: 2px solid var(--teal);
+  background: #fff;
+  color: var(--teal);
 }
 
 .primary-button,
@@ -484,7 +488,7 @@ textarea {
 }
 
 .primary-button {
-  background: var(--teal);
+  background: linear-gradient(180deg, #2edbaf, #11b88f);
 }
 
 .primary-button.recording {
@@ -875,7 +879,9 @@ textarea {
   }
 
   .dialogue {
-    min-height: 100px;
+    height: auto;
+    max-height: 188px;
+    overscroll-behavior: contain;
   }
 
   .message.ai {
@@ -905,7 +911,6 @@ textarea {
     height: 86px;
   }
 
-  .recording-area,
   .feedback-panel,
   .challenge-poster {
     grid-template-columns: 1fr;
@@ -913,10 +918,6 @@ textarea {
 
   .controls {
     grid-template-columns: 46px 1fr 1fr;
-  }
-
-  .success-button {
-    grid-column: auto;
   }
 
   .word-grid {
@@ -951,11 +952,7 @@ textarea {
 
 @media (max-width: 390px) {
   .controls {
-    grid-template-columns: 46px 1fr;
-  }
-
-  .success-button {
-    grid-column: 1 / -1;
+    grid-template-columns: 46px 1fr 1fr;
   }
 }
 }

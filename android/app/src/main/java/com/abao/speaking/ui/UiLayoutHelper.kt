@@ -1,7 +1,6 @@
 package com.abao.speaking.ui
 
 import android.content.res.Configuration
-import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.abao.speaking.R
@@ -17,7 +16,7 @@ object UiLayoutHelper {
         val isTablet = config.smallestScreenWidthDp >= 600
         applyShellLayout(binding, widthDp, isTablet)
         applyFeedbackLayout(binding, widthDp, isTablet)
-        applyRecordingLayout(binding, widthDp, isTablet)
+        applyRecordingLayout(binding)
         applyWarmupSpan(binding.wordGrid, widthDp, isTablet)
     }
 
@@ -78,44 +77,29 @@ object UiLayoutHelper {
         column.layoutParams = lp
     }
 
-    private fun applyRecordingLayout(binding: ActivityMainBinding, widthDp: Int, isTablet: Boolean) {
-        val horizontal = isTablet || widthDp >= 640
-        binding.recordingArea.orientation = if (horizontal) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
-        binding.recordingArea.gravity = if (horizontal) Gravity.BOTTOM else Gravity.TOP
+    private fun applyRecordingLayout(binding: ActivityMainBinding) {
+        binding.recordingArea.orientation = LinearLayout.VERTICAL
+        binding.recordingControls.orientation = LinearLayout.HORIZONTAL
 
-        val res = binding.root.resources
         val transcriptLp = binding.transcriptBox.layoutParams as LinearLayout.LayoutParams
-        val controlsLp = binding.recordingControls.layoutParams as LinearLayout.LayoutParams
-        val recordLp = binding.recordButton.layoutParams as LinearLayout.LayoutParams
-        val finishLp = binding.finishButton.layoutParams as LinearLayout.LayoutParams
-
-        if (horizontal) {
-            transcriptLp.width = 0
-            transcriptLp.weight = 1f
-            transcriptLp.marginEnd = 0
-            transcriptLp.bottomMargin = 0
-
-            controlsLp.width = res.getDimensionPixelSize(R.dimen.recording_controls_panel_width)
-            controlsLp.weight = 0f
-            controlsLp.marginStart = res.getDimensionPixelSize(R.dimen.recording_area_gap)
-            controlsLp.topMargin = 0
-        } else {
-            transcriptLp.width = ViewGroup.LayoutParams.MATCH_PARENT
-            transcriptLp.weight = 0f
-            transcriptLp.bottomMargin = dp(binding, 12)
-
-            controlsLp.width = ViewGroup.LayoutParams.MATCH_PARENT
-            controlsLp.weight = 0f
-            controlsLp.marginStart = 0
-            controlsLp.topMargin = dp(binding, 14)
-        }
-        recordLp.width = ViewGroup.LayoutParams.MATCH_PARENT
-        recordLp.weight = 0f
-        finishLp.width = ViewGroup.LayoutParams.MATCH_PARENT
-        finishLp.weight = 0f
+        transcriptLp.width = ViewGroup.LayoutParams.MATCH_PARENT
+        transcriptLp.weight = 0f
         binding.transcriptBox.layoutParams = transcriptLp
+
+        val controlsLp = binding.recordingControls.layoutParams as LinearLayout.LayoutParams
+        controlsLp.width = ViewGroup.LayoutParams.MATCH_PARENT
+        controlsLp.weight = 0f
+        controlsLp.topMargin = dp(binding, 12)
         binding.recordingControls.layoutParams = controlsLp
+
+        val recordLp = binding.recordButton.layoutParams as LinearLayout.LayoutParams
+        recordLp.width = 0
+        recordLp.weight = 1f
         binding.recordButton.layoutParams = recordLp
+
+        val finishLp = binding.finishButton.layoutParams as LinearLayout.LayoutParams
+        finishLp.width = 0
+        finishLp.weight = 1f
         binding.finishButton.layoutParams = finishLp
     }
 

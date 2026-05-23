@@ -15,6 +15,7 @@
     <!-- 对话区随内容增高，超过此高度再滚动（对齐网页约 158px） -->
     <dimen name="dialogue_height">200dp</dimen>
     <dimen name="panel_scrollbar_size">10dp</dimen>
+    <dimen name="dialogue_scrollbar_size">6dp</dimen>
     <dimen name="dialogue_panel_padding_h">12dp</dimen>
     <dimen name="dialogue_panel_padding_v">10dp</dimen>
     <dimen name="scenario_spinner_width">220dp</dimen>

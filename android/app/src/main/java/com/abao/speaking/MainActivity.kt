@@ -29,6 +29,7 @@ import com.abao.speaking.logic.WebScript
 import com.abao.speaking.model.DialogueMessage
 import com.abao.speaking.model.ScoreResult
 import com.abao.speaking.ui.PandaIdleAnimator
+import com.abao.speaking.ui.NestedScrollCoordinator
 import com.abao.speaking.ui.UiLayoutHelper
 import com.abao.speaking.ui.WordCardAdapter
 import com.abao.speaking.util.AssetImageLoader
@@ -69,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         binding.challengeSectionTitle.sectionTitleText.setText(R.string.challenge_title)
         setupScenarioSpinner()
         setupWarmupGrid()
+        NestedScrollCoordinator.attachInner(binding.dialogueScroll, binding.panelPractice)
         setupTabs()
         setupActions()
         selectScenario(currentScenario.id, fromSpinner = false)
@@ -196,7 +198,7 @@ class MainActivity : AppCompatActivity() {
             dialogueMessages.forEach { message ->
                 binding.dialogueContainer.addView(createMessageView(message))
             }
-            scrollPracticePanelToDialogueEnd()
+            scrollDialogueToEnd()
         }
         if (binding.dialogueContainer.width > 0) {
             render()
@@ -208,18 +210,14 @@ class MainActivity : AppCompatActivity() {
     private fun appendMessage(role: String, text: String, sub: String = "") {
         dialogueMessages.add(DialogueMessage(role, text, sub))
         binding.dialogueContainer.addView(createMessageView(DialogueMessage(role, text, sub)))
-        scrollPracticePanelToDialogueEnd()
+        scrollDialogueToEnd()
         binding.dialogueContainer.sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
     }
 
-    /** 新消息后滚到对话区末尾（仅滚动外层 panelPractice，不与内层抢手势） */
-    private fun scrollPracticePanelToDialogueEnd() {
-        binding.panelPractice.post {
-            val scrollY = binding.dialoguePanel.bottom - binding.panelPractice.height +
-                binding.panelPractice.paddingBottom + binding.panelPractice.paddingTop
-            if (scrollY > 0) {
-                binding.panelPractice.smoothScrollTo(0, scrollY)
-            }
+    /** 新消息后滚到对话区末尾（仅内层 dialogueScroll） */
+    private fun scrollDialogueToEnd() {
+        binding.dialogueScroll.post {
+            binding.dialogueScroll.fullScroll(View.FOCUS_DOWN)
         }
     }
 
