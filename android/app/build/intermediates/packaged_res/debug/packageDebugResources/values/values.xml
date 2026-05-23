@@ -28,6 +28,7 @@
     <dimen name="dialogue_panel_margin_top">0dp</dimen>
     <dimen name="dialogue_panel_padding_h">12dp</dimen>
     <dimen name="dialogue_panel_padding_v">10dp</dimen>
+    <dimen name="dialogue_scrollbar_size">6dp</dimen>
     <dimen name="lesson_panel_gap">20dp</dimen>
     <dimen name="panda_avatar_margin_bottom">38dp</dimen>
     <dimen name="panda_shadow_margin_bottom">12dp</dimen>
@@ -105,7 +106,6 @@
         <item name="backgroundTint">@color/white</item>
     </style>
     <style name="PracticeFinishButton" parent="Widget.AppCompat.Button">
-        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/practice_control_button_height</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/white</item>
@@ -115,7 +115,6 @@
         <item name="android:textStyle">bold</item>
     </style>
     <style name="PracticeRecordButton" parent="Widget.AppCompat.Button">
-        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/practice_control_button_height</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/white</item>

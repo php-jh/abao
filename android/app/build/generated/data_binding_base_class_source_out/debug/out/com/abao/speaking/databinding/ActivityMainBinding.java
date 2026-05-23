@@ -54,7 +54,7 @@ public final class ActivityMainBinding implements ViewBinding {
   public final LinearLayout dialogueContainer;
 
   @NonNull
-  public final LinearLayout dialoguePanel;
+  public final NestedScrollView dialogueScroll;
 
   @NonNull
   public final LayoutFeedbackPanelBinding feedbackPanel;
@@ -135,7 +135,7 @@ public final class ActivityMainBinding implements ViewBinding {
       @NonNull TextView agentHint, @NonNull TextView agentOnlineTitle,
       @NonNull LinearLayout agentPanel, @NonNull TextView brandTitle,
       @NonNull ImageView challengeImage, @NonNull IncludeSectionTitleBinding challengeSectionTitle,
-      @NonNull LinearLayout dialogueContainer, @NonNull LinearLayout dialoguePanel,
+      @NonNull LinearLayout dialogueContainer, @NonNull NestedScrollView dialogueScroll,
       @NonNull LayoutFeedbackPanelBinding feedbackPanel, @NonNull Button finishButton,
       @NonNull MaterialButton hintButton, @NonNull LinearLayout lessonPanel,
       @NonNull ImageView pandaAvatar, @NonNull TextView pandaAvatarFallback,
@@ -158,7 +158,7 @@ public final class ActivityMainBinding implements ViewBinding {
     this.challengeImage = challengeImage;
     this.challengeSectionTitle = challengeSectionTitle;
     this.dialogueContainer = dialogueContainer;
-    this.dialoguePanel = dialoguePanel;
+    this.dialogueScroll = dialogueScroll;
     this.feedbackPanel = feedbackPanel;
     this.finishButton = finishButton;
     this.hintButton = hintButton;
@@ -262,9 +262,9 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.dialoguePanel;
-      LinearLayout dialoguePanel = ViewBindings.findChildViewById(rootView, id);
-      if (dialoguePanel == null) {
+      id = R.id.dialogueScroll;
+      NestedScrollView dialogueScroll = ViewBindings.findChildViewById(rootView, id);
+      if (dialogueScroll == null) {
         break missingId;
       }
 
@@ -422,7 +422,7 @@ public final class ActivityMainBinding implements ViewBinding {
 
       return new ActivityMainBinding((ConstraintLayout) rootView, agentCard, agentHint,
           agentOnlineTitle, agentPanel, brandTitle, challengeImage, binding_challengeSectionTitle,
-          dialogueContainer, dialoguePanel, binding_feedbackPanel, finishButton, hintButton,
+          dialogueContainer, dialogueScroll, binding_feedbackPanel, finishButton, hintButton,
           lessonPanel, pandaAvatar, pandaAvatarFallback, pandaShadow, pandaStage, panelChallenge,
           panelPractice, panelWarmup, recordButton, recordingArea, recordingControls,
           scenarioSelect, scenarioTitle, speakPromptButton, studentInput, tabChallenge, tabPractice,

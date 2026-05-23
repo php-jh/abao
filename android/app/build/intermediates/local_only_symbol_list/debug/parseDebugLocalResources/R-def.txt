@@ -28,6 +28,7 @@ dimen dialogue_height
 dimen dialogue_panel_margin_top
 dimen dialogue_panel_padding_h
 dimen dialogue_panel_padding_v
+dimen dialogue_scrollbar_size
 dimen lesson_panel_gap
 dimen panda_avatar_margin_bottom
 dimen panda_shadow_margin_bottom
@@ -69,6 +70,7 @@ drawable bg_enter_button
 drawable bg_input
 drawable bg_logo_circle
 drawable bg_panda_shadow
+drawable bg_practice_play_button
 drawable bg_practice_record_button
 drawable bg_scenario_chip
 drawable bg_scenario_chip_active
@@ -98,7 +100,7 @@ id challengeImage
 id challengeSectionTitle
 id correctionText
 id dialogueContainer
-id dialoguePanel
+id dialogueScroll
 id enterButton
 id feedbackAnalysisColumn
 id feedbackContent

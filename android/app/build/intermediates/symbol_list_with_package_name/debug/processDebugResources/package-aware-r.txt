@@ -2271,6 +2271,7 @@ dimen dialogue_height
 dimen dialogue_panel_margin_top
 dimen dialogue_panel_padding_h
 dimen dialogue_panel_padding_v
+dimen dialogue_scrollbar_size
 dimen disabled_alpha_material_dark
 dimen disabled_alpha_material_light
 dimen fastscroll_default_thickness
@@ -3054,6 +3055,7 @@ drawable bg_enter_button
 drawable bg_input
 drawable bg_logo_circle
 drawable bg_panda_shadow
+drawable bg_practice_play_button
 drawable bg_practice_record_button
 drawable bg_scenario_chip
 drawable bg_scenario_chip_active
@@ -3340,7 +3342,7 @@ id design_menu_item_text
 id design_navigation_view
 id dialog_button
 id dialogueContainer
-id dialoguePanel
+id dialogueScroll
 id dimensions
 id direct
 id disableHome

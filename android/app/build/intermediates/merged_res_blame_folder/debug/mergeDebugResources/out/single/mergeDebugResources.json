@@ -4,6 +4,10 @@
         "source": "E:\\java\\gradle\\daemon\\8.12\\com.abao.speaking.app-main-34:\\drawable\\bg_dialogue_panel.xml"
     },
     {
+        "merged": "com.abao.speaking.app-debug-32:/drawable_bg_practice_record_button.xml.flat",
+        "source": "com.abao.speaking.app-main-34:/drawable/bg_practice_record_button.xml"
+    },
+    {
         "merged": "E:\\java\\gradle\\daemon\\8.12\\com.abao.speaking.app-debug-32:\\drawable_scrollbar_thumb_vertical.xml.flat",
         "source": "E:\\java\\gradle\\daemon\\8.12\\com.abao.speaking.app-main-34:\\drawable\\scrollbar_thumb_vertical.xml"
     },
@@ -46,6 +50,10 @@
     {
         "merged": "E:\\java\\gradle\\daemon\\8.12\\com.abao.speaking.app-debug-32:\\drawable_bg_success_button.xml.flat",
         "source": "E:\\java\\gradle\\daemon\\8.12\\com.abao.speaking.app-main-34:\\drawable\\bg_success_button.xml"
+    },
+    {
+        "merged": "com.abao.speaking.app-debug-32:/drawable_bg_practice_play_button.xml.flat",
+        "source": "com.abao.speaking.app-main-34:/drawable/bg_practice_play_button.xml"
     },
     {
         "merged": "E:\\java\\gradle\\daemon\\8.12\\com.abao.speaking.app-debug-32:\\drawable_bg_ai_message.xml.flat",

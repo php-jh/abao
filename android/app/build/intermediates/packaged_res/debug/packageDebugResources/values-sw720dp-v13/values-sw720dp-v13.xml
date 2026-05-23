@@ -8,6 +8,7 @@
     <dimen name="control_button_gap">18dp</dimen>
     <dimen name="control_button_height">50dp</dimen>
     <dimen name="dialogue_height">220dp</dimen>
+    <dimen name="dialogue_scrollbar_size">7dp</dimen>
     <dimen name="lesson_panel_gap">18dp</dimen>
     <dimen name="panda_avatar_margin_bottom">42dp</dimen>
     <dimen name="panda_shadow_margin_bottom">18dp</dimen>
