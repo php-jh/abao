@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
@@ -28,10 +30,19 @@ public final class ActivityMainBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
+  public final LinearLayout agentCard;
+
+  @NonNull
   public final TextView agentHint;
 
   @NonNull
+  public final TextView agentOnlineTitle;
+
+  @NonNull
   public final LinearLayout agentPanel;
+
+  @NonNull
+  public final TextView brandTitle;
 
   @NonNull
   public final ImageView challengeImage;
@@ -43,7 +54,7 @@ public final class ActivityMainBinding implements ViewBinding {
   public final LinearLayout dialogueContainer;
 
   @NonNull
-  public final ScrollView dialogueScroll;
+  public final LinearLayout dialoguePanel;
 
   @NonNull
   public final LayoutFeedbackPanelBinding feedbackPanel;
@@ -64,13 +75,19 @@ public final class ActivityMainBinding implements ViewBinding {
   public final TextView pandaAvatarFallback;
 
   @NonNull
+  public final View pandaShadow;
+
+  @NonNull
+  public final FrameLayout pandaStage;
+
+  @NonNull
   public final ScrollView panelChallenge;
 
   @NonNull
-  public final ScrollView panelPractice;
+  public final NestedScrollView panelPractice;
 
   @NonNull
-  public final ScrollView panelWarmup;
+  public final LinearLayout panelWarmup;
 
   @NonNull
   public final Button recordButton;
@@ -114,15 +131,17 @@ public final class ActivityMainBinding implements ViewBinding {
   @NonNull
   public final RecyclerView wordGrid;
 
-  private ActivityMainBinding(@NonNull ConstraintLayout rootView, @NonNull TextView agentHint,
-      @NonNull LinearLayout agentPanel, @NonNull ImageView challengeImage,
-      @NonNull IncludeSectionTitleBinding challengeSectionTitle,
-      @NonNull LinearLayout dialogueContainer, @NonNull ScrollView dialogueScroll,
+  private ActivityMainBinding(@NonNull ConstraintLayout rootView, @NonNull LinearLayout agentCard,
+      @NonNull TextView agentHint, @NonNull TextView agentOnlineTitle,
+      @NonNull LinearLayout agentPanel, @NonNull TextView brandTitle,
+      @NonNull ImageView challengeImage, @NonNull IncludeSectionTitleBinding challengeSectionTitle,
+      @NonNull LinearLayout dialogueContainer, @NonNull LinearLayout dialoguePanel,
       @NonNull LayoutFeedbackPanelBinding feedbackPanel, @NonNull Button finishButton,
       @NonNull MaterialButton hintButton, @NonNull LinearLayout lessonPanel,
       @NonNull ImageView pandaAvatar, @NonNull TextView pandaAvatarFallback,
-      @NonNull ScrollView panelChallenge, @NonNull ScrollView panelPractice,
-      @NonNull ScrollView panelWarmup, @NonNull Button recordButton,
+      @NonNull View pandaShadow, @NonNull FrameLayout pandaStage,
+      @NonNull ScrollView panelChallenge, @NonNull NestedScrollView panelPractice,
+      @NonNull LinearLayout panelWarmup, @NonNull Button recordButton,
       @NonNull LinearLayout recordingArea, @NonNull LinearLayout recordingControls,
       @NonNull Spinner scenarioSelect, @NonNull TextView scenarioTitle,
       @NonNull MaterialButton speakPromptButton, @NonNull EditText studentInput,
@@ -131,18 +150,23 @@ public final class ActivityMainBinding implements ViewBinding {
       @NonNull MaterialButton translateButton,
       @NonNull IncludeSectionTitleBinding warmupSectionTitle, @NonNull RecyclerView wordGrid) {
     this.rootView = rootView;
+    this.agentCard = agentCard;
     this.agentHint = agentHint;
+    this.agentOnlineTitle = agentOnlineTitle;
     this.agentPanel = agentPanel;
+    this.brandTitle = brandTitle;
     this.challengeImage = challengeImage;
     this.challengeSectionTitle = challengeSectionTitle;
     this.dialogueContainer = dialogueContainer;
-    this.dialogueScroll = dialogueScroll;
+    this.dialoguePanel = dialoguePanel;
     this.feedbackPanel = feedbackPanel;
     this.finishButton = finishButton;
     this.hintButton = hintButton;
     this.lessonPanel = lessonPanel;
     this.pandaAvatar = pandaAvatar;
     this.pandaAvatarFallback = pandaAvatarFallback;
+    this.pandaShadow = pandaShadow;
+    this.pandaStage = pandaStage;
     this.panelChallenge = panelChallenge;
     this.panelPractice = panelPractice;
     this.panelWarmup = panelWarmup;
@@ -189,15 +213,33 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.agentCard;
+      LinearLayout agentCard = ViewBindings.findChildViewById(rootView, id);
+      if (agentCard == null) {
+        break missingId;
+      }
+
       id = R.id.agentHint;
       TextView agentHint = ViewBindings.findChildViewById(rootView, id);
       if (agentHint == null) {
         break missingId;
       }
 
+      id = R.id.agentOnlineTitle;
+      TextView agentOnlineTitle = ViewBindings.findChildViewById(rootView, id);
+      if (agentOnlineTitle == null) {
+        break missingId;
+      }
+
       id = R.id.agentPanel;
       LinearLayout agentPanel = ViewBindings.findChildViewById(rootView, id);
       if (agentPanel == null) {
+        break missingId;
+      }
+
+      id = R.id.brandTitle;
+      TextView brandTitle = ViewBindings.findChildViewById(rootView, id);
+      if (brandTitle == null) {
         break missingId;
       }
 
@@ -220,9 +262,9 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.dialogueScroll;
-      ScrollView dialogueScroll = ViewBindings.findChildViewById(rootView, id);
-      if (dialogueScroll == null) {
+      id = R.id.dialoguePanel;
+      LinearLayout dialoguePanel = ViewBindings.findChildViewById(rootView, id);
+      if (dialoguePanel == null) {
         break missingId;
       }
 
@@ -263,6 +305,18 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.pandaShadow;
+      View pandaShadow = ViewBindings.findChildViewById(rootView, id);
+      if (pandaShadow == null) {
+        break missingId;
+      }
+
+      id = R.id.pandaStage;
+      FrameLayout pandaStage = ViewBindings.findChildViewById(rootView, id);
+      if (pandaStage == null) {
+        break missingId;
+      }
+
       id = R.id.panelChallenge;
       ScrollView panelChallenge = ViewBindings.findChildViewById(rootView, id);
       if (panelChallenge == null) {
@@ -270,13 +324,13 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       id = R.id.panelPractice;
-      ScrollView panelPractice = ViewBindings.findChildViewById(rootView, id);
+      NestedScrollView panelPractice = ViewBindings.findChildViewById(rootView, id);
       if (panelPractice == null) {
         break missingId;
       }
 
       id = R.id.panelWarmup;
-      ScrollView panelWarmup = ViewBindings.findChildViewById(rootView, id);
+      LinearLayout panelWarmup = ViewBindings.findChildViewById(rootView, id);
       if (panelWarmup == null) {
         break missingId;
       }
@@ -366,13 +420,13 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((ConstraintLayout) rootView, agentHint, agentPanel,
-          challengeImage, binding_challengeSectionTitle, dialogueContainer, dialogueScroll,
-          binding_feedbackPanel, finishButton, hintButton, lessonPanel, pandaAvatar,
-          pandaAvatarFallback, panelChallenge, panelPractice, panelWarmup, recordButton,
-          recordingArea, recordingControls, scenarioSelect, scenarioTitle, speakPromptButton,
-          studentInput, tabChallenge, tabPractice, tabWarmup, transcriptBox, translateButton,
-          binding_warmupSectionTitle, wordGrid);
+      return new ActivityMainBinding((ConstraintLayout) rootView, agentCard, agentHint,
+          agentOnlineTitle, agentPanel, brandTitle, challengeImage, binding_challengeSectionTitle,
+          dialogueContainer, dialoguePanel, binding_feedbackPanel, finishButton, hintButton,
+          lessonPanel, pandaAvatar, pandaAvatarFallback, pandaShadow, pandaStage, panelChallenge,
+          panelPractice, panelWarmup, recordButton, recordingArea, recordingControls,
+          scenarioSelect, scenarioTitle, speakPromptButton, studentInput, tabChallenge, tabPractice,
+          tabWarmup, transcriptBox, translateButton, binding_warmupSectionTitle, wordGrid);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

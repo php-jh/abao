@@ -30,7 +30,7 @@
     <string name="challenge_heading">面试互动挑战</string>
     <string name="challenge_body">你在面试中被问到最大的弱点。结合专业和未来岗位，选择一个真实且恰当的弱点，运用 PAR 模型进行回答。</string>
     <string name="scenario_label">选择模拟情景</string>
-    <string name="recording_placeholder">安卓端正在录音，请开始说英文…</string>
+    <string name="recording_placeholder">正在聆听，请说英文。说完后再次点击「停止并识别」。</string>
     <string name="recognizing_placeholder">安卓端正在识别…</string>
     <string name="recognize_error_suffix">。也可以直接输入英文用于演示。</string>
     <string name="dialogue_live_region">对话区域</string>

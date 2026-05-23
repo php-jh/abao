@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.abao.speaking.audio.DeviceSpeechRecognizer
 import com.abao.speaking.audio.SpeechPlayer
 import com.abao.speaking.data.AppData
 import com.abao.speaking.databinding.ActivityMainBinding
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val recorder = WavRecorder()
+    private val dashScopeClient = DashScopeParaformerClient()
     private val nlsClient = AliyunNlsClient()
     private val executor = Executors.newSingleThreadExecutor()
 
@@ -47,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     private var recognizing = false
     private var startedAt = 0L
     private lateinit var speechPlayer: SpeechPlayer
+    private lateinit var deviceSpeech: DeviceSpeechRecognizer
     private val dialogueMessages = mutableListOf<DialogueMessage>()
     private var suppressSpinnerEvent = true
     private var currentTab = Tab.WARMUP
@@ -61,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         speechPlayer = SpeechPlayer(this)
+        deviceSpeech = DeviceSpeechRecognizer(this)
         binding.warmupSectionTitle.sectionTitleText.setText(R.string.warmup_title)
         binding.challengeSectionTitle.sectionTitleText.setText(R.string.challenge_title)
         setupScenarioSpinner()
@@ -82,6 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         PandaIdleAnimator.stop(binding.pandaAvatar)
+        deviceSpeech.release()
         speechPlayer.shutdown()
         executor.shutdown()
         super.onDestroy()
@@ -103,7 +108,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupScenarioSpinner() {
         val titles = AppData.scenarios.map { it.title }
-        binding.scenarioSelect.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, titles)
+        val adapter = ArrayAdapter(this, R.layout.item_scenario_spinner, titles)
+        adapter.setDropDownViewResource(R.layout.item_scenario_spinner_dropdown)
+        binding.scenarioSelect.adapter = adapter
         binding.scenarioSelect.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (suppressSpinnerEvent) return
@@ -114,8 +121,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupWarmupGrid() {
-        binding.wordGrid.layoutManager = GridLayoutManager(this, 3)
-        binding.wordGrid.adapter = WordCardAdapter(AppData.warmupWords) { speak(it) }
+        binding.wordGrid.apply {
+            layoutManager = GridLayoutManager(this@MainActivity, 3)
+            adapter = WordCardAdapter(AppData.warmupWords) { speak(it) }
+            isNestedScrollingEnabled = true
+            overScrollMode = android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
+        }
     }
 
     private fun setupTabs() {
@@ -156,13 +167,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateAgentHint() {
-        binding.agentHint.text = when (currentTab) {
-            Tab.PRACTICE -> "当前情景：${currentScenario.title}"
-            else -> getString(R.string.agent_hint_default)
-        }
+        val tabs = listOf(binding.tabWarmup, binding.tabPractice, binding.tabChallenge)
+        val index = Tab.entries.indexOf(currentTab).coerceAtLeast(0)
+        binding.agentHint.text = tabs.getOrNull(index)?.text?.toString().orEmpty()
     }
 
-    private fun selectScenario(id: String, fromSpinner: Boolean) {
+    private fun selectScenario(id: String, fromSpinner: Boolean = false) {
         currentScenario = AppData.scenarios.find { it.id == id } ?: AppData.scenarios.first()
         val index = AppData.scenarios.indexOf(currentScenario)
         if (!fromSpinner && binding.scenarioSelect.selectedItemPosition != index) {
@@ -181,26 +191,42 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun renderDialogue() {
-        binding.dialogueContainer.removeAllViews()
-        dialogueMessages.forEach { message ->
-            binding.dialogueContainer.addView(createMessageView(message))
+        val render = {
+            binding.dialogueContainer.removeAllViews()
+            dialogueMessages.forEach { message ->
+                binding.dialogueContainer.addView(createMessageView(message))
+            }
+            scrollPracticePanelToDialogueEnd()
         }
-        binding.dialogueScroll.post { binding.dialogueScroll.fullScroll(View.FOCUS_DOWN) }
+        if (binding.dialogueContainer.width > 0) {
+            render()
+        } else {
+            binding.dialogueContainer.post { render() }
+        }
     }
 
     private fun appendMessage(role: String, text: String, sub: String = "") {
         dialogueMessages.add(DialogueMessage(role, text, sub))
         binding.dialogueContainer.addView(createMessageView(DialogueMessage(role, text, sub)))
-        binding.dialogueScroll.post {
-            binding.dialogueScroll.fullScroll(View.FOCUS_DOWN)
-            binding.dialogueContainer.sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+        scrollPracticePanelToDialogueEnd()
+        binding.dialogueContainer.sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+    }
+
+    /** 新消息后滚到对话区末尾（仅滚动外层 panelPractice，不与内层抢手势） */
+    private fun scrollPracticePanelToDialogueEnd() {
+        binding.panelPractice.post {
+            val scrollY = binding.dialoguePanel.bottom - binding.panelPractice.height +
+                binding.panelPractice.paddingBottom + binding.panelPractice.paddingTop
+            if (scrollY > 0) {
+                binding.panelPractice.smoothScrollTo(0, scrollY)
+            }
         }
     }
 
     private fun createMessageView(message: DialogueMessage): View {
         val isStudent = message.role == "student"
         val item = ItemDialogueMessageBinding.inflate(layoutInflater, binding.dialogueContainer, false)
-        val maxBubbleWidth = (resources.displayMetrics.widthPixels * 0.78f).toInt()
+
         item.root.setBackgroundResource(
             if (isStudent) R.drawable.bg_student_message else R.drawable.bg_ai_message
         )
@@ -211,41 +237,55 @@ class MainActivity : AppCompatActivity() {
         } else {
             item.messageSub.visibility = View.GONE
         }
-        item.root.measure(
-            View.MeasureSpec.makeMeasureSpec(maxBubbleWidth, View.MeasureSpec.AT_MOST),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-        )
-        item.root.layoutParams = LinearLayout.LayoutParams(
-            item.root.measuredWidth,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            gravity = if (isStudent) Gravity.END else Gravity.START
+        if (isStudent) {
+            val wrap = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            item.messageText.layoutParams = wrap
+            item.messageSub.layoutParams = wrap
+            item.root.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = Gravity.END
+            }
+        } else {
+            val fill = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            item.messageText.layoutParams = fill
+            item.messageSub.layoutParams = fill
+            item.root.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = Gravity.START
+            }
         }
         return item.root
     }
 
     private fun toggleRecording() {
         if (recognizing) {
-            recognizing = false
-            binding.recordButton.setBackgroundResource(R.drawable.bg_teal_button)
-            binding.recordButton.isEnabled = false
-            binding.recordButton.text = getString(R.string.record_recognizing)
-            binding.studentInput.hint = getString(R.string.recognizing_placeholder)
-            executor.execute {
-                try {
-                    val wav = recorder.stop()
-                    val text = nlsClient.recognize(wav)
-                    runOnUiThread { onRecognized(text) }
-                } catch (error: Exception) {
-                    runOnUiThread { onRecognizeError(error.message ?: "识别失败") }
-                }
-            }
+            stopRecordingAndRecognize()
             return
         }
         ensureRecordPermission()
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
             != PackageManager.PERMISSION_GRANTED
         ) {
+            Toast.makeText(this, "需要麦克风权限才能语音录入", Toast.LENGTH_SHORT).show()
+            binding.studentInput.requestFocus()
+            return
+        }
+        startRecording()
+    }
+
+    private fun startRecording() {
+        if (!AliyunConfig.isCloudAsrConfigured() && !deviceSpeech.isAvailable()) {
+            Toast.makeText(this, "本设备不支持语音识别，请直接输入英文", Toast.LENGTH_LONG).show()
             binding.studentInput.requestFocus()
             return
         }
@@ -256,18 +296,63 @@ class MainActivity : AppCompatActivity() {
             binding.recordButton.setBackgroundResource(R.drawable.bg_danger_button)
             binding.recordButton.text = getString(R.string.record_stop)
             binding.studentInput.hint = getString(R.string.recording_placeholder)
-            recorder.start(this)
+            if (AliyunConfig.isCloudAsrConfigured()) {
+                recorder.start(this)
+            } else {
+                deviceSpeech.start(
+                    onPartial = { partial -> applyRecognizedText(partial, keepFocus = true) },
+                    onFinal = { finalText -> onRecognized(finalText) },
+                    onError = { message -> onRecognizeError(message) }
+                )
+            }
         } catch (error: Exception) {
             onRecognizeError(error.message ?: "录音失败")
+        }
+    }
+
+    private fun stopRecordingAndRecognize() {
+        recognizing = false
+        binding.recordButton.isEnabled = false
+        binding.recordButton.setBackgroundResource(R.drawable.bg_practice_record_button)
+        binding.recordButton.text = getString(R.string.record_recognizing)
+        binding.studentInput.hint = getString(R.string.recognizing_placeholder)
+        if (AliyunConfig.isCloudAsrConfigured()) {
+            executor.execute {
+                try {
+                    val wav = recorder.stop()
+                    val text = recognizeWithCloud(wav)
+                    runOnUiThread { onRecognized(text) }
+                } catch (error: Exception) {
+                    runOnUiThread { onRecognizeError(error.message ?: "识别失败") }
+                }
+            }
+        } else {
+            deviceSpeech.stopListening()
+        }
+    }
+
+    private fun recognizeWithCloud(wav: ByteArray): String = when {
+        AliyunConfig.isDashScopeConfigured() -> dashScopeClient.recognize(wav)
+        AliyunConfig.isNlsConfigured() -> nlsClient.recognize(wav)
+        else -> throw IllegalStateException("未配置云端语音识别")
+    }
+
+    private fun applyRecognizedText(text: String, keepFocus: Boolean = false) {
+        binding.studentInput.setText(text)
+        if (text.isNotEmpty()) {
+            binding.studentInput.setSelection(text.length)
+        }
+        if (keepFocus) {
+            binding.studentInput.requestFocus()
         }
     }
 
     private fun onRecognized(text: String) {
         recognizing = false
         binding.recordButton.isEnabled = true
-        binding.recordButton.setBackgroundResource(R.drawable.bg_teal_button)
+        binding.recordButton.setBackgroundResource(R.drawable.bg_practice_record_button)
         binding.recordButton.text = getString(R.string.record_start)
-        binding.studentInput.setText(text)
+        applyRecognizedText(text.trim())
         binding.studentInput.hint = if (text.isBlank()) {
             "未识别到内容，请重试或直接输入英文。"
         } else {
@@ -282,8 +367,9 @@ class MainActivity : AppCompatActivity() {
     private fun onRecognizeError(message: String) {
         pendingFinishAfterRecognize = false
         recognizing = false
+        deviceSpeech.cancel()
         binding.recordButton.isEnabled = true
-        binding.recordButton.setBackgroundResource(R.drawable.bg_teal_button)
+        binding.recordButton.setBackgroundResource(R.drawable.bg_practice_record_button)
         binding.recordButton.text = getString(R.string.record_start)
         binding.studentInput.hint = message + getString(R.string.recognize_error_suffix)
     }

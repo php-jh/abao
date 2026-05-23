@@ -4,18 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_app_gradient"
-    android:padding="14dp">
+    android:padding="@dimen/activity_padding">
 
     <!-- 左侧：阿宝智能体 -->
     <LinearLayout
         android:id="@+id/agentPanel"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.28">
+        app:layout_constraintWidth_min="300dp"
+        app:layout_constraintWidth_percent="0.31">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,41 +27,59 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
                 android:background="@drawable/bg_brand_mark"
                 android:gravity="center"
                 android:text="🐼"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/brandTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:maxLines="1"
                 android:text="@string/brand_title"
                 android:textColor="@color/brand_blue"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="20sp"
+                app:autoSizeMinTextSize="16sp"
+                app:autoSizeStepGranularity="1sp"
+                app:autoSizeTextType="uniform" />
         </LinearLayout>
 
         <FrameLayout
+            android:id="@+id/pandaStage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingVertical="8dp">
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="@dimen/panda_stage_padding_bottom">
 
             <View
-                android:layout_width="220dp"
-                android:layout_height="44dp"
+                android:id="@+id/pandaShadow"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
                 android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="12dp"
+                android:layout_marginStart="@dimen/panda_shadow_margin_h"
+                android:layout_marginEnd="@dimen/panda_shadow_margin_h"
+                android:layout_marginBottom="@dimen/panda_shadow_margin_bottom"
                 android:background="@drawable/bg_panda_shadow" />
 
             <ImageView
                 android:id="@+id/pandaAvatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="@dimen/panda_avatar_margin_bottom"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/agent_online"
                 android:scaleType="fitCenter" />
 
@@ -66,18 +87,24 @@
                 android:id="@+id/pandaAvatarFallback"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="@dimen/panda_avatar_margin_bottom"
                 android:gravity="center"
                 android:text="🐼"
-                android:textSize="96sp" />
+                android:textSize="108sp" />
         </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/agentCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/agent_card_margin_top"
+            android:minHeight="70dp"
             android:background="@drawable/bg_card"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="12dp">
+            android:paddingHorizontal="@dimen/agent_card_padding_h"
+            android:paddingVertical="@dimen/agent_card_padding_v">
 
             <View
                 android:layout_width="12dp"
@@ -87,25 +114,28 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/agentOnlineTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/agent_online"
                     android:textColor="@color/ink"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/agentHint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="4dp"
+                    android:lineSpacingMultiplier="1.35"
                     android:text="@string/agent_hint_default"
                     android:textColor="@color/muted"
-                    android:textSize="13sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -115,7 +145,8 @@
         android:id="@+id/lessonPanel"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="@dimen/lesson_panel_gap"
+        android:clipChildren="true"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -158,54 +189,60 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1">
 
-            <!-- 课前热身 -->
-            <ScrollView
+            <!-- 课前热身：标题固定，词卡网格由 RecyclerView 独立滚动 -->
+            <LinearLayout
                 android:id="@+id/panelWarmup"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_card"
-                android:fillViewport="true"
-                android:padding="20dp">
+                android:orientation="vertical"
+                android:padding="@dimen/card_padding">
 
-                <LinearLayout
+                <include
+                    android:id="@+id/warmupSectionTitle"
+                    layout="@layout/include_section_title"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content" />
 
-                    <include
-                        android:id="@+id/warmupSectionTitle"
-                        layout="@layout/include_section_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/wordGrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:clipToPadding="false"
+                    android:overScrollMode="ifContentScrolls"
+                    android:paddingBottom="12dp"
+                    android:scrollbars="vertical" />
+            </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/wordGrid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:nestedScrollingEnabled="false" />
-                </LinearLayout>
-            </ScrollView>
-
-            <!-- 课中演练 -->
-            <ScrollView
+            <!-- 课中演练：整块可滚动，右侧显示加粗滚动条，底部学生回答可拖出 -->
+            <androidx.core.widget.NestedScrollView
                 android:id="@+id/panelPractice"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_card"
-                android:fillViewport="true"
-                android:padding="20dp"
+                android:clipToPadding="false"
+                android:fadeScrollbars="false"
+                android:fillViewport="false"
+                android:padding="@dimen/card_padding"
+                android:scrollbarSize="@dimen/panel_scrollbar_size"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbarThumbVertical="@drawable/scrollbar_thumb_vertical"
+                android:scrollbars="vertical"
                 android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingBottom="20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
+                        android:minHeight="48dp"
                         android:orientation="horizontal">
 
                         <View
@@ -219,22 +256,29 @@
                             android:layout_marginStart="12dp"
                             android:text="@string/practice_title"
                             android:textColor="@color/ink"
-                            android:textSize="24sp"
+                            android:textSize="28sp"
                             android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
 
                         <Spinner
                             android:id="@+id/scenarioSelect"
+                            android:layout_width="@dimen/scenario_spinner_width"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_scenario_spinner"
                             android:contentDescription="@string/scenario_label"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_weight="1" />
+                            android:popupBackground="@color/white"
+                            android:spinnerMode="dropdown" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="@dimen/scenario_strip_margin_top"
+                        android:layout_marginBottom="@dimen/scenario_strip_margin_bottom"
                         android:background="@drawable/bg_scenario_strip"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
@@ -251,14 +295,14 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/current_scenario"
                                 android:textColor="@color/muted"
-                                android:textSize="12sp" />
+                                android:textSize="13sp" />
 
                             <TextView
                                 android:id="@+id/scenarioTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/ink"
-                                android:textSize="18sp"
+                                android:textSize="20sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -278,21 +322,28 @@
                             android:text="@string/translate_help" />
                     </LinearLayout>
 
-                    <ScrollView
-                        android:id="@+id/dialogueScroll"
+                    <!-- 对话区随内容增高，与下方录入区共用外层 panelPractice 滚动，避免双层滑轮抢手势 -->
+                    <LinearLayout
+                        android:id="@+id/dialoguePanel"
                         android:layout_width="match_parent"
-                        android:layout_height="160dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/bg_dialogue_panel"
                         android:contentDescription="@string/dialogue_live_region"
-                        android:scrollbars="vertical">
+                        android:importantForAccessibility="yes"
+                        android:minHeight="@dimen/dialogue_height"
+                        android:orientation="vertical"
+                        android:paddingStart="@dimen/dialogue_panel_padding_h"
+                        android:paddingTop="@dimen/dialogue_panel_padding_v"
+                        android:paddingEnd="@dimen/dialogue_panel_padding_h"
+                        android:paddingBottom="@dimen/dialogue_panel_padding_v">
 
                         <LinearLayout
                             android:id="@+id/dialogueContainer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:importantForAccessibility="yes"
                             android:orientation="vertical" />
-                    </ScrollView>
+                    </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
@@ -304,87 +355,87 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/transcriptBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/student_answer"
-                        android:labelFor="@id/studentInput"
-                        android:textColor="#56667B"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/studentInput"
-                        android:layout_width="match_parent"
-                        android:layout_height="88dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_input"
-                        android:gravity="top|start"
-                        android:hint="@string/input_placeholder"
-                        android:inputType="textMultiLine|textCapSentences"
-                        android:padding="12dp"
-                        android:textColor="@color/ink"
-                        android:textSize="15sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/recordingControls"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="4dp"
+                        android:baselineAligned="false"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/speakPromptButton"
-                            style="@style/GhostButton"
-                            android:layout_width="46dp"
-                            android:layout_height="46dp"
-                            android:contentDescription="@string/play_prompt"
-                            android:insetLeft="0dp"
-                            android:insetRight="0dp"
-                            android:minWidth="46dp"
-                            android:padding="0dp"
-                            android:text="▶" />
-
-                        <Button
-                            android:id="@+id/recordButton"
+                        <LinearLayout
+                            android:id="@+id/transcriptBox"
                             android:layout_width="0dp"
-                            android:layout_height="46dp"
-                            android:layout_marginStart="8dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/bg_teal_button"
-                            android:text="@string/record_start"
-                            android:textAllCaps="false"
-                            android:textColor="@color/white"
-                            android:textStyle="bold" />
+                            android:orientation="vertical">
 
-                        <Button
-                            android:id="@+id/finishButton"
-                            android:layout_width="0dp"
-                            android:layout_height="46dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/bg_success_button"
-                            android:text="@string/finish_reading"
-                            android:textAllCaps="false"
-                            android:textColor="@color/white"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:labelFor="@id/studentInput"
+                                android:text="@string/student_answer"
+                                android:textColor="#56667B"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <EditText
+                                android:id="@+id/studentInput"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/student_input_height"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/bg_input"
+                                android:gravity="top|start"
+                                android:hint="@string/input_placeholder"
+                                android:inputType="textMultiLine|textCapSentences"
+                                android:minHeight="96dp"
+                                android:padding="14dp"
+                                android:textColor="@color/ink"
+                                android:textColorHint="@color/muted"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/recordingControls"
+                            android:layout_width="@dimen/recording_controls_panel_width"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/recording_area_gap"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/speakPromptButton"
+                                style="@style/GhostButton"
+                                android:layout_width="@dimen/control_button_height"
+                                android:layout_height="@dimen/control_button_height"
+                                android:layout_marginBottom="@dimen/control_button_gap"
+                                android:contentDescription="@string/play_prompt"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                android:minWidth="@dimen/control_button_height"
+                                android:padding="0dp"
+                                android:text="▶" />
+
+                            <Button
+                                android:id="@+id/recordButton"
+                                style="@style/PracticeRecordButton"
+                                android:layout_marginBottom="@dimen/control_button_gap"
+                                android:background="@drawable/bg_practice_record_button"
+                                android:stateListAnimator="@null"
+                                android:text="@string/record_start" />
+
+                            <Button
+                                android:id="@+id/finishButton"
+                                style="@style/PracticeFinishButton"
+                                android:background="@drawable/bg_success_button"
+                                android:stateListAnimator="@null"
+                                android:text="@string/finish_reading" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <include
                         android:id="@+id/feedbackPanel"
                         layout="@layout/layout_feedback_panel" />
+
                 </LinearLayout>
-            </ScrollView>
+            </androidx.core.widget.NestedScrollView>
 
             <!-- 课后挑战 -->
             <ScrollView
@@ -393,7 +444,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_card"
                 android:fillViewport="true"
-                android:padding="20dp"
+                android:padding="@dimen/card_padding"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -417,7 +468,7 @@
                         <ImageView
                             android:id="@+id/challengeImage"
                             android:layout_width="0dp"
-                            android:layout_height="200dp"
+                            android:layout_height="@dimen/challenge_image_height"
                             android:layout_marginEnd="16dp"
                             android:layout_weight="1.1"
                             android:contentDescription="@string/challenge_heading"

@@ -1,94 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/splashRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_splash_gradient">
+    android:background="#F4F9FF"
+    android:fitsSystemWindows="false">
+
+    <!-- 首页整页设计图 panda-hero.jpg，全屏铺满 -->
+    <ImageView
+        android:id="@+id/splashPanda"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/splash_title"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 图片缺失时的占位布局（默认隐藏） -->
+    <View
+        android:id="@+id/splashOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_splash_overlay"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/splashSplitGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.46" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/splashCopyGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2875" />
 
     <TextView
         android:id="@+id/splashLogo"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
-        android:layout_gravity="start|top"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="@dimen/splash_logo_size"
+        android:layout_height="@dimen/splash_logo_size"
         android:background="@drawable/bg_logo_circle"
         android:gravity="center"
         android:text="🐼"
-        android:textSize="28sp" />
+        android:textColor="#5C9BEA"
+        android:textSize="30sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/splashLeftPanel"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
-        android:layout_marginStart="28dp"
-        android:layout_marginEnd="28dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/splashSplitGuide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/splashCopyGuide">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/splashTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/splash_title"
-            android:textColor="@color/ink"
-            android:textSize="34sp"
+            android:textColor="#202B39"
+            android:textSize="@dimen/splash_title_size"
             android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/waveLine"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_marginTop="22dp"
-            android:layout_marginBottom="28dp"
-            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/splash_title_to_wave_gap"
+            android:layout_marginBottom="@dimen/splash_wave_to_button_gap"
+            android:gravity="bottom"
             android:orientation="horizontal" />
 
         <LinearLayout
             android:id="@+id/enterButton"
             android:layout_width="wrap_content"
-            android:layout_height="62dp"
+            android:layout_height="@dimen/splash_enter_height"
             android:background="@drawable/bg_enter_button"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
+            android:minWidth="@dimen/splash_enter_min_width"
             android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="20dp">
+            android:paddingStart="20dp"
+            android:paddingEnd="28dp">
 
             <TextView
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_teal_button"
+                android:layout_width="@dimen/splash_enter_icon_size"
+                android:layout_height="@dimen/splash_enter_icon_size"
+                android:background="@drawable/bg_splash_mic"
                 android:gravity="center"
                 android:text="🎙"
                 android:textColor="@color/white"
-                android:textSize="22sp" />
+                android:textSize="28sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="14dp"
                 android:text="@string/enter_system"
                 android:textColor="#2464C3"
-                android:textSize="22sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/splashPanda"
-        android:layout_width="280dp"
-        android:layout_height="360dp"
-        android:layout_gravity="end|bottom"
-        android:contentDescription="@string/splash_title"
-        android:scaleType="centerCrop"
-        android:visibility="gone" />
 
     <TextView
         android:id="@+id/splashPandaFallback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="48dp"
         android:text="🐼"
-        android:textSize="120sp" />
-</FrameLayout>
+        android:textSize="140sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/splashTapOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:contentDescription="@string/enter_system"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

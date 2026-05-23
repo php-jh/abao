@@ -124,6 +124,7 @@ function enterSystem() {
 }
 
 function switchTab(tabName) {
+  const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
   document.querySelectorAll(".tab").forEach((tab) => tab.classList.toggle("active", tab.dataset.tab === tabName));
   ["warmup", "practice", "challenge"].forEach((id) => {
     document.getElementById(id).hidden = id !== tabName;
@@ -131,13 +132,15 @@ function switchTab(tabName) {
   $("#appShell").dataset.stage = tabName;
   state.avatarStage = tabName;
   $("#pandaAvatarImage").src = tabName === "challenge" ? "./assets/panda-suit.png" : "./assets/panda-hanfu.png";
+  if (activeTab) {
+    $("#agentHint").textContent = activeTab.textContent.trim();
+  }
 }
 
 function selectScenario(id) {
   state.current = scenarios.find((item) => item.id === id) || scenarios[0];
   $("#scenarioSelect").value = state.current.id;
   $("#scenarioTitle").textContent = state.current.title;
-  $("#agentHint").textContent = `当前情景：${state.current.title}`;
   input.value = "";
   input.placeholder = "点击开始录入，或直接输入一句英文用于演示。";
   $("#feedbackPanel").hidden = true;

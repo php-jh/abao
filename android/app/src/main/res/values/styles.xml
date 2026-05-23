@@ -4,18 +4,28 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:statusBarColor">@color/soft</item>
         <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/deep_blue</item>
         <item name="colorAccent">@color/teal</item>
     </style>
 
+    <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
     <style name="TabButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">42dp</item>
+        <item name="android:layout_height">@dimen/tab_height</item>
         <item name="android:layout_weight">1</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="cornerRadius">999dp</item>
         <item name="strokeColor">@color/line</item>
@@ -35,5 +45,48 @@
         <item name="android:textColor">@color/deep_blue</item>
         <item name="android:textStyle">bold</item>
         <item name="backgroundTint">@color/white</item>
+    </style>
+
+    <style name="ScenarioChip" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/deep_blue</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="strokeColor">#CDE2FF</item>
+        <item name="cornerRadius">999dp</item>
+    </style>
+
+    <style name="ScenarioChip.Active">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/deep_blue</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <style name="PracticeRecordButton" parent="Widget.AppCompat.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/practice_control_button_height</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+    </style>
+
+    <style name="PracticeFinishButton" parent="Widget.AppCompat.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/practice_control_button_height</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

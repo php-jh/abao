@@ -4,12 +4,13 @@ package com.abao.speaking.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Guideline;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.abao.speaking.R;
@@ -19,13 +20,22 @@ import java.lang.String;
 
 public final class ActivitySplashBinding implements ViewBinding {
   @NonNull
-  private final FrameLayout rootView;
+  private final ConstraintLayout rootView;
 
   @NonNull
   public final LinearLayout enterButton;
 
   @NonNull
+  public final Guideline splashCopyGuide;
+
+  @NonNull
+  public final LinearLayout splashLeftPanel;
+
+  @NonNull
   public final TextView splashLogo;
+
+  @NonNull
+  public final View splashOverlay;
 
   @NonNull
   public final ImageView splashPanda;
@@ -34,22 +44,45 @@ public final class ActivitySplashBinding implements ViewBinding {
   public final TextView splashPandaFallback;
 
   @NonNull
+  public final ConstraintLayout splashRoot;
+
+  @NonNull
+  public final Guideline splashSplitGuide;
+
+  @NonNull
+  public final View splashTapOverlay;
+
+  @NonNull
+  public final TextView splashTitle;
+
+  @NonNull
   public final LinearLayout waveLine;
 
-  private ActivitySplashBinding(@NonNull FrameLayout rootView, @NonNull LinearLayout enterButton,
-      @NonNull TextView splashLogo, @NonNull ImageView splashPanda,
-      @NonNull TextView splashPandaFallback, @NonNull LinearLayout waveLine) {
+  private ActivitySplashBinding(@NonNull ConstraintLayout rootView,
+      @NonNull LinearLayout enterButton, @NonNull Guideline splashCopyGuide,
+      @NonNull LinearLayout splashLeftPanel, @NonNull TextView splashLogo,
+      @NonNull View splashOverlay, @NonNull ImageView splashPanda,
+      @NonNull TextView splashPandaFallback, @NonNull ConstraintLayout splashRoot,
+      @NonNull Guideline splashSplitGuide, @NonNull View splashTapOverlay,
+      @NonNull TextView splashTitle, @NonNull LinearLayout waveLine) {
     this.rootView = rootView;
     this.enterButton = enterButton;
+    this.splashCopyGuide = splashCopyGuide;
+    this.splashLeftPanel = splashLeftPanel;
     this.splashLogo = splashLogo;
+    this.splashOverlay = splashOverlay;
     this.splashPanda = splashPanda;
     this.splashPandaFallback = splashPandaFallback;
+    this.splashRoot = splashRoot;
+    this.splashSplitGuide = splashSplitGuide;
+    this.splashTapOverlay = splashTapOverlay;
+    this.splashTitle = splashTitle;
     this.waveLine = waveLine;
   }
 
   @Override
   @NonNull
-  public FrameLayout getRoot() {
+  public ConstraintLayout getRoot() {
     return rootView;
   }
 
@@ -80,9 +113,27 @@ public final class ActivitySplashBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.splashCopyGuide;
+      Guideline splashCopyGuide = ViewBindings.findChildViewById(rootView, id);
+      if (splashCopyGuide == null) {
+        break missingId;
+      }
+
+      id = R.id.splashLeftPanel;
+      LinearLayout splashLeftPanel = ViewBindings.findChildViewById(rootView, id);
+      if (splashLeftPanel == null) {
+        break missingId;
+      }
+
       id = R.id.splashLogo;
       TextView splashLogo = ViewBindings.findChildViewById(rootView, id);
       if (splashLogo == null) {
+        break missingId;
+      }
+
+      id = R.id.splashOverlay;
+      View splashOverlay = ViewBindings.findChildViewById(rootView, id);
+      if (splashOverlay == null) {
         break missingId;
       }
 
@@ -98,14 +149,35 @@ public final class ActivitySplashBinding implements ViewBinding {
         break missingId;
       }
 
+      ConstraintLayout splashRoot = (ConstraintLayout) rootView;
+
+      id = R.id.splashSplitGuide;
+      Guideline splashSplitGuide = ViewBindings.findChildViewById(rootView, id);
+      if (splashSplitGuide == null) {
+        break missingId;
+      }
+
+      id = R.id.splashTapOverlay;
+      View splashTapOverlay = ViewBindings.findChildViewById(rootView, id);
+      if (splashTapOverlay == null) {
+        break missingId;
+      }
+
+      id = R.id.splashTitle;
+      TextView splashTitle = ViewBindings.findChildViewById(rootView, id);
+      if (splashTitle == null) {
+        break missingId;
+      }
+
       id = R.id.waveLine;
       LinearLayout waveLine = ViewBindings.findChildViewById(rootView, id);
       if (waveLine == null) {
         break missingId;
       }
 
-      return new ActivitySplashBinding((FrameLayout) rootView, enterButton, splashLogo, splashPanda,
-          splashPandaFallback, waveLine);
+      return new ActivitySplashBinding((ConstraintLayout) rootView, enterButton, splashCopyGuide,
+          splashLeftPanel, splashLogo, splashOverlay, splashPanda, splashPandaFallback, splashRoot,
+          splashSplitGuide, splashTapOverlay, splashTitle, waveLine);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -311,13 +311,14 @@ textarea {
 }
 
 .lesson-card {
-  height: auto;
-  min-height: 0;
   flex: 1;
+  min-height: 0;
   margin-top: -10px;
   padding: 28px 32px 20px;
   border-radius: 8px;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .section-title {
@@ -381,37 +382,54 @@ textarea {
 }
 
 .dialogue {
-  height: 158px;
-  overflow: auto;
+  min-height: 120px;
+  overflow: visible;
   padding: 4px 4px 10px;
   border-bottom: 1px solid #d8e1ef;
 }
 
+#practice.lesson-card {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+#practice.lesson-card::-webkit-scrollbar {
+  width: 10px;
+}
+
+#practice.lesson-card::-webkit-scrollbar-thumb {
+  background: #8fa8c8;
+  border-radius: 5px;
+}
+
 .message {
-  width: fit-content;
-  max-width: 78%;
+  box-sizing: border-box;
   margin: 10px 0;
-  padding: 14px 16px;
+  padding: 12px 14px;
   border-radius: 8px;
-  line-height: 1.45;
-  font-size: 20px;
+  line-height: 1.4;
+  font-size: 16px;
 }
 
 .message.ai {
+  width: 100%;
+  max-width: 100%;
   background: #fff;
   border: 1px solid #e2ecf9;
 }
 
 .message.student {
+  width: fit-content;
+  max-width: 78%;
   margin-left: auto;
   background: #c9f6eb;
 }
 
 .message small {
   display: block;
-  margin-top: 5px;
+  margin-top: 4px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .recording-area {
@@ -857,18 +875,25 @@ textarea {
   }
 
   .dialogue {
-    height: auto;
-    max-height: 188px;
+    min-height: 100px;
+  }
+
+  .message.ai {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .message.student {
+    max-width: 92%;
   }
 
   .message {
-    max-width: 92%;
-    font-size: 16px;
-    padding: 12px 14px;
+    font-size: 15px;
+    padding: 10px 12px;
   }
 
   .message small {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .recording-area {

@@ -6,30 +6,46 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
-/** 加载网页 assets 目录下的图片，兼容 HTML 路径 ./assets/xxx */
+data class LoadedAssetImage(
+    val width: Int,
+    val height: Int
+)
+
+/** 与参考页 index.html 一致，优先 ./assets/ 路径 */
 object AssetImageLoader {
     fun load(
         activity: AppCompatActivity,
         fileName: String,
         imageView: ImageView,
-        fallback: TextView? = null
+        fallback: TextView? = null,
+        onResult: ((LoadedAssetImage?) -> Unit)? = null
     ) {
         val candidates = listOf(
+            "www/assets/$fileName",
             "images/$fileName",
-            fileName,
-            "www/assets/$fileName"
+            fileName
         )
         for (path in candidates) {
             runCatching {
                 activity.assets.open(path).use { stream ->
-                    val bitmap = BitmapFactory.decodeStream(stream) ?: return
-                    imageView.setImageBitmap(bitmap)
-                    imageView.visibility = View.VISIBLE
-                    fallback?.visibility = View.GONE
-                    imageView.requestLayout()
-                    return
+                    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                    BitmapFactory.decodeStream(stream, null, bounds)
+                    val width = bounds.outWidth
+                    val height = bounds.outHeight
+                    if (width <= 0 || height <= 0) return
+
+                    activity.assets.open(path).use { decodeStream ->
+                        val bitmap = BitmapFactory.decodeStream(decodeStream) ?: return
+                        imageView.setImageBitmap(bitmap)
+                        imageView.visibility = View.VISIBLE
+                        fallback?.visibility = View.GONE
+                        imageView.requestLayout()
+                        onResult?.invoke(LoadedAssetImage(width, height))
+                        return
+                    }
                 }
             }
         }
+        onResult?.invoke(null)
     }
 }
